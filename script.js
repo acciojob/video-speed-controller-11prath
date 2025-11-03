@@ -1,60 +1,58 @@
-// Get elements
-const player = document.querySelector('.player');
-const video = player.querySelector('.viewer');
-const progress = player.querySelector('.progress');
-const progressBar = player.querySelector('.progress__filled');
-const toggle = player.querySelector('.toggle');
-const skipButtons = player.querySelectorAll('[data-skip]');
-const ranges = player.querySelectorAll('.player__slider');
-
-// Toggle play/pause
-function togglePlay() {
-  const method = video.paused ? 'play' : 'pause';
-  video[method]();
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #222;
+  color: white;
+  font-family: sans-serif;
 }
 
-// Update play/pause button icon
-function updateButton() {
-  const icon = video.paused ? '►' : '❚ ❚';
-  toggle.textContent = icon;
+.player {
+  max-width: 750px;
+  border: 2px solid #444;
+  position: relative;
 }
 
-// Handle volume and playback speed changes
-function handleRangeUpdate() {
-  video[this.name] = this.value;
+.viewer {
+  width: 100%;
+  max-height: 420px;
 }
 
-// Skip forward or backward
-function skip() {
-  video.currentTime += parseFloat(this.dataset.skip);
+.player__controls {
+  display: flex;
+  align-items: center;
+  background: #333;
+  padding: 10px;
+  gap: 8px;
 }
 
-// Update progress bar as video plays
-function handleProgress() {
-  const percent = (video.currentTime / video.duration) * 100;
-  progressBar.style.flexBasis = `${percent}%`;
+.player__button {
+  background: none;
+  border: 1px solid #555;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
-// Scrub (seek) through the video using progress bar
-function scrub(e) {
-  const scrubTime = (e.offsetX / progress.offsetWidth) * video.duration;
-  video.currentTime = scrubTime;
+.player__slider {
+  width: 100px;
 }
 
-// Event listeners
-video.addEventListener('click', togglePlay);
-video.addEventListener('play', updateButton);
-video.addEventListener('pause', updateButton);
-video.addEventListener('timeupdate', handleProgress);
+.progress {
+  flex: 1;
+  background: #555;
+  cursor: pointer;
+  height: 10px;
+  position: relative;
+}
 
-toggle.addEventListener('click', togglePlay);
-skipButtons.forEach(button => button.addEventListener('click', skip));
-ranges.forEach(range => range.addEventListener('change', handleRangeUpdate));
-ranges.forEach(range => range.addEventListener('mousemove', handleRangeUpdate));
+.progress__filled {
+  width: 0;
+  background: #ffc600;
+  height: 100%;
+  transition: width 0.1s;
+}
 
-let mousedown = false;
-progress.addEventListener('click', scrub);
-progress.addEventListener('mousemove', (e) => mousedown && scrub(e));
-progress.addEventListener('mousedown', () => (mousedown = true));
-progress.addEventListener('mouseup', () => (mousedown = false));
 
